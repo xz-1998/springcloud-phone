@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.xz.dao.PhoneDao">
+    <!--查询总条数-->
+    <select id="getCount" resultType="int">
+        select count(1) from t_phone
+        <include refid="tc"></include>
+    </select>
+    <!--查询-->
+    <select id="queryPhone" resultType="com.jk.xz.pojo.PhoneBean">
+        select * from t_phone
+        <include refid="tc"></include>
+        limit #{start},#{rows}
+    </select>
+    <!--条查-->
+    <sql id="tc">
+        <where>
+            <if test="phone.name !=null and phone.name!=''">
+                name like '%${phone.name}%'
+            </if>
+            <if test="phone.sdate !=null and phone.sdate!=''">
+               and date &gt;=#{phone.sdate}
+            </if>
+            <if test="phone.edate !=null and phone.edate!=''">
+               and date &lt;=#{phone.edate}
+            </if>
+        </where>
+    </sql>
+   <!--删除-->
+    <delete id="delAll">
+        delete from t_phone where id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
